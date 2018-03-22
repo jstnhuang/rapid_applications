@@ -1,8 +1,8 @@
 #include "actionlib/client/action_client.h"
-#include "pr2_controllers_msgs/JointTrajectoryAction.h"
-#include "moveit/robot_model_loader/robot_model_loader.h"
 #include "moveit/robot_model/robot_model.h"
+#include "moveit/robot_model_loader/robot_model_loader.h"
 #include "moveit/robot_state/robot_state.h"
+#include "pr2_controllers_msgs/JointTrajectoryAction.h"
 #include "rapid_manipulation/joint_state_reader.h"
 #include "rapid_pr2/arm_joints.h"
 #include "rapid_pr2/pr2.h"
@@ -20,7 +20,8 @@ using rapid::pr2::Pr2;
 using rapid::manipulation::JointStateReader;
 using robot_model::RobotModelPtr;
 typedef actionlib::SimpleActionClient<
-    pr2_controllers_msgs::JointTrajectoryAction> TrajClient;
+    pr2_controllers_msgs::JointTrajectoryAction>
+    TrajClient;
 
 struct ActionStep {
  public:
@@ -139,7 +140,7 @@ void EvaluateStep(const JointStateReader& joint_reader,
 }
 
 void ShowAndSay(Pr2* pr2, const string& message) {
-  pr2->display()->ShowMessage(message, "");
+  // pr2->display()->ShowMessage(message, "");
   pr2->sound()->Say(message);
 }
 
@@ -148,8 +149,8 @@ void WaitForButton(Pr2* pr2) {
   vector<string> choices;
   choices.push_back("Okay");
   string choice;
-  pr2->display()->AskMultipleChoice("Press Okay to continue.", choices,
-                                    &choice);
+  // pr2->display()->AskMultipleChoice("Press Okay to continue.", choices,
+  //                                  &choice);
 }
 
 int main(int argc, char** argv) {
@@ -286,7 +287,7 @@ int main(int argc, char** argv) {
     WaitForButton(pr2);
   }
 
-  pr2->display()->ShowDefault();
+  // pr2->display()->ShowDefault();
 
   delete pr2;
   return 0;
