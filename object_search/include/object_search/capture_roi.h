@@ -6,7 +6,6 @@
 #include "geometry_msgs/Transform.h"
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
-#include "rapid_msgs/CaptureRoi3D.h"
 #include "rapid_msgs/Roi3D.h"
 #include "rapid_perception/box3d_roi_server.h"
 #include "ros/ros.h"
