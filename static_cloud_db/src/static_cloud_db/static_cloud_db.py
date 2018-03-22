@@ -5,10 +5,10 @@ from pymongo import MongoClient
 from mongo_msg_db import MessageDb
 from mongo_msg_db_msgs.msg import Collection
 from rapid_msgs.msg import StaticCloud, StaticCloudInfo
-from rapid_msgs.srv import GetStaticCloud, GetStaticCloudResponse
-from rapid_msgs.srv import ListStaticClouds, ListStaticCloudsResponse
-from rapid_msgs.srv import SaveStaticCloud, SaveStaticCloudResponse
-from rapid_msgs.srv import RemoveStaticCloud, RemoveStaticCloudResponse
+from static_cloud_db_msgs.srv import GetStaticCloud, GetStaticCloudResponse
+from static_cloud_db_msgs.srv import ListStaticClouds, ListStaticCloudsResponse
+from static_cloud_db_msgs.srv import SaveStaticCloud, SaveStaticCloudResponse
+from static_cloud_db_msgs.srv import RemoveStaticCloud, RemoveStaticCloudResponse
 from rospy_message_converter import json_message_converter as jmc
 from sensor_msgs.msg import PointCloud2
 

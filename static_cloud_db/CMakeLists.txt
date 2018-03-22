@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   rospy_message_converter
   sensor_msgs
+  static_cloud_db_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +107,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES static_cloud_db
-  CATKIN_DEPENDS mongo_msg_db mongo_msg_db_msgs rapid_msgs roscpp rospy rospy_message_converter sensor_msgs
+  CATKIN_DEPENDS mongo_msg_db mongo_msg_db_msgs rapid_msgs roscpp rospy rospy_message_converter sensor_msgs static_cloud_db_msgs
 #  DEPENDS system_lib
 )
 
