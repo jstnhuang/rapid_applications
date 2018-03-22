@@ -10,10 +10,6 @@
 #include "rapid_db/name_db.hpp"
 #include "rapid_msgs/LandmarkInfo.h"
 #include "rapid_msgs/SceneInfo.h"
-#include "rapid_msgs/GetStaticCloud.h"
-#include "rapid_msgs/ListStaticClouds.h"
-#include "rapid_msgs/RemoveStaticCloud.h"
-#include "rapid_msgs/SaveStaticCloud.h"
 #include "rapid_perception/box3d_roi_server.h"
 #include "rapid_perception/grouping_pose_estimator.h"
 #include "rapid_perception/pose_estimation.h"
@@ -23,12 +19,16 @@
 #include "rapid_viz/scene_viz.h"
 #include "ros/ros.h"
 #include "sensor_msgs/PointCloud2.h"
+#include "static_cloud_db_msgs/GetStaticCloud.h"
+#include "static_cloud_db_msgs/ListStaticClouds.h"
+#include "static_cloud_db_msgs/RemoveStaticCloud.h"
+#include "static_cloud_db_msgs/SaveStaticCloud.h"
 #include "visualization_msgs/Marker.h"
 #include "visualization_msgs/MarkerArray.h"
 
 #include "object_search/capture_roi.h"
-#include "object_search/commands.h"
 #include "object_search/cloud_database.h"
+#include "object_search/commands.h"
 #include "object_search/estimators.h"
 
 using sensor_msgs::PointCloud2;
@@ -46,13 +46,17 @@ int main(int argc, char** argv) {
 
   // Build databases
   ros::ServiceClient get_cloud =
-      nh.serviceClient<rapid_msgs::GetStaticCloud>("get_static_cloud");
+      nh.serviceClient<static_cloud_db_msgs::GetStaticCloud>(
+          "get_static_cloud");
   ros::ServiceClient list_clouds =
-      nh.serviceClient<rapid_msgs::ListStaticClouds>("list_static_clouds");
+      nh.serviceClient<static_cloud_db_msgs::ListStaticClouds>(
+          "list_static_clouds");
   ros::ServiceClient remove_cloud =
-      nh.serviceClient<rapid_msgs::RemoveStaticCloud>("remove_static_cloud");
+      nh.serviceClient<static_cloud_db_msgs::RemoveStaticCloud>(
+          "remove_static_cloud");
   ros::ServiceClient save_cloud =
-      nh.serviceClient<rapid_msgs::SaveStaticCloud>("save_static_cloud");
+      nh.serviceClient<static_cloud_db_msgs::SaveStaticCloud>(
+          "save_static_cloud");
   Database object_db("object_search", "objects", get_cloud, list_clouds,
                      remove_cloud, save_cloud);
   Database scene_db("object_search", "scenes", get_cloud, list_clouds,
@@ -149,7 +153,8 @@ int main(int argc, char** argv) {
   DeleteCommand delete_landmark(&landmark_ndb, &landmark_cloud_ndb, "landmark");
   DeleteCommand delete_scene(&scene_ndb, &scene_cloud_ndb, "scene");
   SetInputLandmarkCommand set_input_landmark(&landmark_ndb, &landmark_cloud_ndb,
-                                             landmark_pub, marker_pub, &estimator_input);
+                                             landmark_pub, marker_pub,
+                                             &estimator_input);
   SetInputSceneCommand set_input_scene(&scene_ndb, &scene_cloud_ndb, scene_viz,
                                        &estimator_input);
   // SetLandmarkSceneCommand set_landmark_scene(&scene_ndb, &estimator_input,

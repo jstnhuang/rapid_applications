@@ -2,12 +2,12 @@
 
 #include <string>
 
-#include "rapid_msgs/GetStaticCloud.h"
-#include "rapid_msgs/ListStaticClouds.h"
-#include "rapid_msgs/RemoveStaticCloud.h"
-#include "rapid_msgs/SaveStaticCloud.h"
 #include "rapid_msgs/StaticCloud.h"
 #include "rapid_msgs/StaticCloudInfo.h"
+#include "static_cloud_db_msgs/GetStaticCloud.h"
+#include "static_cloud_db_msgs/ListStaticClouds.h"
+#include "static_cloud_db_msgs/RemoveStaticCloud.h"
+#include "static_cloud_db_msgs/SaveStaticCloud.h"
 
 namespace object_search {
 Database::Database(const std::string& db, const std::string& collection,
@@ -23,11 +23,11 @@ Database::Database(const std::string& db, const std::string& collection,
       save_(save) {}
 
 bool Database::Get(const std::string& name, rapid_msgs::StaticCloud* cloud) {
-  rapid_msgs::GetStaticCloudRequest req;
+  static_cloud_db_msgs::GetStaticCloudRequest req;
   req.collection.db = db_;
   req.collection.collection = collection_;
   req.name = name;
-  rapid_msgs::GetStaticCloudResponse res;
+  static_cloud_db_msgs::GetStaticCloudResponse res;
   bool success = get_.call(req, res);
   if (!success) {
     ROS_ERROR("Get call failed.");
@@ -42,11 +42,11 @@ bool Database::Get(const std::string& name, rapid_msgs::StaticCloud* cloud) {
 }
 
 bool Database::GetById(const std::string& id, rapid_msgs::StaticCloud* cloud) {
-  rapid_msgs::GetStaticCloudRequest req;
+  static_cloud_db_msgs::GetStaticCloudRequest req;
   req.collection.db = db_;
   req.collection.collection = collection_;
   req.id = id;
-  rapid_msgs::GetStaticCloudResponse res;
+  static_cloud_db_msgs::GetStaticCloudResponse res;
   bool success = get_.call(req, res);
   if (!success) {
     ROS_ERROR("Get call failed.");
@@ -60,10 +60,10 @@ bool Database::GetById(const std::string& id, rapid_msgs::StaticCloud* cloud) {
 }
 
 void Database::List(std::vector<rapid_msgs::StaticCloudInfo>* clouds) {
-  rapid_msgs::ListStaticCloudsRequest req;
+  static_cloud_db_msgs::ListStaticCloudsRequest req;
   req.collection.db = db_;
   req.collection.collection = collection_;
-  rapid_msgs::ListStaticCloudsResponse res;
+  static_cloud_db_msgs::ListStaticCloudsResponse res;
   bool success = list_.call(req, res);
   if (!success) {
     ROS_ERROR("List call failed.");
@@ -72,11 +72,11 @@ void Database::List(std::vector<rapid_msgs::StaticCloudInfo>* clouds) {
 }
 
 bool Database::Remove(const std::string& name) {
-  rapid_msgs::RemoveStaticCloudRequest req;
+  static_cloud_db_msgs::RemoveStaticCloudRequest req;
   req.collection.db = db_;
   req.collection.collection = collection_;
   req.name = name;
-  rapid_msgs::RemoveStaticCloudResponse res;
+  static_cloud_db_msgs::RemoveStaticCloudResponse res;
   bool success = remove_.call(req, res);
   if (!success) {
     ROS_ERROR("Remove call failed.");
@@ -89,11 +89,11 @@ bool Database::Remove(const std::string& name) {
 }
 
 std::string Database::Save(const rapid_msgs::StaticCloud& cloud) {
-  rapid_msgs::SaveStaticCloudRequest req;
+  static_cloud_db_msgs::SaveStaticCloudRequest req;
   req.collection.db = db_;
   req.collection.collection = collection_;
   req.cloud = cloud;
-  rapid_msgs::SaveStaticCloudResponse res;
+  static_cloud_db_msgs::SaveStaticCloudResponse res;
   bool success = save_.call(req, res);
   if (!success) {
     ROS_ERROR("Save call failed.");

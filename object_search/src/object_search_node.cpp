@@ -10,10 +10,6 @@
 #include "pcl/point_types.h"
 #include "pcl_conversions/pcl_conversions.h"
 #include "pcl_ros/transforms.h"
-#include "rapid_msgs/GetStaticCloud.h"
-#include "rapid_msgs/ListStaticClouds.h"
-#include "rapid_msgs/RemoveStaticCloud.h"
-#include "rapid_msgs/SaveStaticCloud.h"
 #include "rapid_perception/pose_estimation.h"
 #include "rapid_perception/pose_estimation_match.h"
 #include "rapid_perception/random_heat_mapper.h"
@@ -21,16 +17,20 @@
 #include "rapid_perception/scene_parsing.h"
 #include "ros/ros.h"
 #include "sensor_msgs/PointCloud2.h"
+#include "static_cloud_db_msgs/GetStaticCloud.h"
+#include "static_cloud_db_msgs/ListStaticClouds.h"
+#include "static_cloud_db_msgs/RemoveStaticCloud.h"
+#include "static_cloud_db_msgs/SaveStaticCloud.h"
 #include "std_msgs/String.h"
 #include "tf/tf.h"
 #include "visualization_msgs/Marker.h"
 
+#include "object_search/capture_roi.h"
+#include "object_search/cloud_database.h"
+#include "object_search/commands.h"
 #include "object_search_msgs/GetObjectInfo.h"
 #include "object_search_msgs/Match.h"
 #include "object_search_msgs/Search.h"
-#include "object_search/capture_roi.h"
-#include "object_search/commands.h"
-#include "object_search/cloud_database.h"
 
 typedef pcl::PointXYZRGB PointC;
 typedef pcl::PointCloud<pcl::PointXYZRGB> PointCloudC;
@@ -318,13 +318,17 @@ int main(int argc, char** argv) {
 
   // Build databases
   ros::ServiceClient get_cloud =
-      nh.serviceClient<rapid_msgs::GetStaticCloud>("get_static_cloud");
+      nh.serviceClient<static_cloud_db_msgs::GetStaticCloud>(
+          "get_static_cloud");
   ros::ServiceClient list_clouds =
-      nh.serviceClient<rapid_msgs::ListStaticClouds>("list_static_clouds");
+      nh.serviceClient<static_cloud_db_msgs::ListStaticClouds>(
+          "list_static_clouds");
   ros::ServiceClient remove_cloud =
-      nh.serviceClient<rapid_msgs::RemoveStaticCloud>("remove_static_cloud");
+      nh.serviceClient<static_cloud_db_msgs::RemoveStaticCloud>(
+          "remove_static_cloud");
   ros::ServiceClient save_cloud =
-      nh.serviceClient<rapid_msgs::SaveStaticCloud>("save_static_cloud");
+      nh.serviceClient<static_cloud_db_msgs::SaveStaticCloud>(
+          "save_static_cloud");
   object_search::Database object_db("object_search", "objects", get_cloud,
                                     list_clouds, remove_cloud, save_cloud);
 
@@ -333,9 +337,11 @@ int main(int argc, char** argv) {
   object_search::CaptureRoi capture(&roi_server);
   capture.set_base_frame("base_link");
 
-  ros::Publisher name_request = nh.advertise<std_msgs::String>("landmarkRequest", 1);
-    
-  object_search::RecordObjectCommand record_object(&object_db, &capture, name_request);
+  ros::Publisher name_request =
+      nh.advertise<std_msgs::String>("landmarkRequest", 1);
+
+  object_search::RecordObjectCommand record_object(&object_db, &capture,
+                                                   name_request);
 
   object_search::ObjectSearchNode node(pose_estimator, record_object,
                                        object_db);

@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   rospy_message_converter
   sensor_msgs
+  static_cloud_db_msgs
   tf
   tf_conversions
   transform_graph
@@ -141,6 +142,7 @@ catkin_package(
     rospy
     rospy_message_converter
     sensor_msgs
+    static_cloud_db_msgs
     tf
     tf_conversions
   DEPENDS

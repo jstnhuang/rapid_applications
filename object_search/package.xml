@@ -21,6 +21,7 @@
   <depend>rospy</depend>
   <depend>rospy_message_converter</depend>
   <depend>sensor_msgs</depend>
+  <depend>static_cloud_db_msgs</depend>
   <depend>tf</depend>
   <depend>tf_conversions</depend>
   <depend>transform_graph</depend>
