@@ -6,6 +6,7 @@
 
 #include "Eigen/Core"
 #include "boost/algorithm/string.hpp"
+#include "pcl/PointIndices.h"
 #include "pcl/common/time.h"
 #include "pcl/filters/crop_box.h"
 #include "pcl/filters/extract_indices.h"
@@ -13,7 +14,6 @@
 #include "pcl/filters/voxel_grid.h"
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
-#include "pcl/PointIndices.h"
 #include "pcl_conversions/pcl_conversions.h"
 #include "pcl_ros/transforms.h"
 #include "rapid_db/name_db.hpp"
@@ -51,7 +51,7 @@ using std::vector;
 using rapid_msgs::StaticCloud;
 using rapid::db::NameDb;
 using rapid::perception::PoseEstimationMatch;
-using rapid::perception::GroupingPoseEstimator;
+// using rapid::perception::GroupingPoseEstimator;
 using rapid::viz::SceneViz;
 
 namespace object_search {
@@ -115,8 +115,13 @@ string ListCommand::description() const { return description_; }
 const char ListCommand::kLandmarks[] = "landmark";
 const char ListCommand::kScenes[] = "scene";
 
-  RecordObjectCommand::RecordObjectCommand(Database* db, CaptureRoi* capture, const ros::Publisher& name_request)
-    : db_(db), capture_(capture), last_id_(""), last_name_(""), name_request_(name_request) {}
+RecordObjectCommand::RecordObjectCommand(Database* db, CaptureRoi* capture,
+                                         const ros::Publisher& name_request)
+    : db_(db),
+      capture_(capture),
+      last_id_(""),
+      last_name_(""),
+      name_request_(name_request) {}
 
 void RecordObjectCommand::Execute(const vector<string>& args) {
   last_id_ = "";    // Reset ID
@@ -135,11 +140,12 @@ void RecordObjectCommand::Execute(const vector<string>& args) {
     std::getline(std::cin, input);
     name = input;
   */
-  
+
   std_msgs::String msg;
   name_request_.publish(msg);
   ROS_INFO("Waiting for the message. Please publish name to /landmarkAnswer");
-  std_msgs::String::ConstPtr ptr = ros::topic::waitForMessage<std_msgs::String>("/landmarkAnswer");
+  std_msgs::String::ConstPtr ptr =
+      ros::topic::waitForMessage<std_msgs::String>("/landmarkAnswer");
   input = ptr->data;
   ROS_INFO("Obtain %s from /landmarkAnswer", input.c_str());
 
@@ -458,12 +464,14 @@ string DeleteCommand::description() const {
   return "<name> - Delete a " + type_;
 }
 
-SetInputLandmarkCommand::SetInputLandmarkCommand(NameDb* info_db,
-                                                 NameDb* cloud_db,
-                                                 const ros::Publisher& pub,
-                                                 const ros::Publisher& marker_pub,
-                                                 PoseEstimatorInput* input)
-    : info_db_(info_db), cloud_db_(cloud_db), pub_(pub), marker_pub_(marker_pub), input_(input) {}
+SetInputLandmarkCommand::SetInputLandmarkCommand(
+    NameDb* info_db, NameDb* cloud_db, const ros::Publisher& pub,
+    const ros::Publisher& marker_pub, PoseEstimatorInput* input)
+    : info_db_(info_db),
+      cloud_db_(cloud_db),
+      pub_(pub),
+      marker_pub_(marker_pub),
+      input_(input) {}
 
 void SetInputLandmarkCommand::Execute(const vector<string>& args) {
   if (args.size() == 0) {
@@ -489,7 +497,8 @@ void SetInputLandmarkCommand::Execute(const vector<string>& args) {
   ps.pose.position.y = input_->landmark.roi.transform.translation.y;
   ps.pose.position.z = input_->landmark.roi.transform.translation.z;
   ps.pose.orientation.w = 1;
-  visualization_msgs::Marker box = rapid::viz::OutlineBox(ps, input_->landmark.roi.dimensions);
+  visualization_msgs::Marker box =
+      rapid::viz::OutlineBox(ps, input_->landmark.roi.dimensions);
   box.ns = "landmark_box";
   box.scale.x = 0.005;
   marker_pub_.publish(box);
@@ -592,7 +601,7 @@ void RunCommand::Execute(const vector<string>& args) {
     estimators_->custom->set_roi(input_->landmark.roi);
     estimators_->custom->set_object(landmark_downsampled);
     estimators_->custom->Find(&matches_);
-  } else if (algorithm == "ransac") {
+  } /*else if (algorithm == "ransac") {
     UpdateEstimatorParams(estimators_->ransac);
     if (estimators_->ransac->voxel_size() != leaf_size) {
       estimators_->ransac->set_voxel_size(leaf_size);
@@ -607,7 +616,7 @@ void RunCommand::Execute(const vector<string>& args) {
     estimators_->grouping->set_object(landmark_cloud);
     estimators_->grouping->set_scene(scene_cropped);
     estimators_->grouping->Find(&matches_);
-  } else {
+  } */ else {
     ROS_ERROR("Unknown algorithm: %s", algorithm.c_str());
     return;
   }

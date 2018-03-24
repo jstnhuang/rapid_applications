@@ -11,10 +11,10 @@
 #include "rapid_msgs/LandmarkInfo.h"
 #include "rapid_msgs/SceneInfo.h"
 #include "rapid_perception/box3d_roi_server.h"
-#include "rapid_perception/grouping_pose_estimator.h"
+//#include "rapid_perception/grouping_pose_estimator.h"
 #include "rapid_perception/pose_estimation.h"
 #include "rapid_perception/random_heat_mapper.h"
-#include "rapid_perception/ransac_pose_estimator.h"
+//#include "rapid_perception/ransac_pose_estimator.h"
 #include "rapid_utils/command_line.h"
 #include "rapid_viz/scene_viz.h"
 #include "ros/ros.h"
@@ -104,26 +104,26 @@ int main(int argc, char** argv) {
   pose_estimator.set_alignment_publisher(alignment_pub);
   // pose_estimator.set_marker_publisher(&marker_pub);
 
-  rapid::perception::RansacPoseEstimator ransac_estimator;
-  ros::Publisher pose_pub =
-      nh.advertise<geometry_msgs::PoseArray>("/poses", 1, true);
-  ransac_estimator.set_pose_publisher(pose_pub);
+  // rapid::perception::RansacPoseEstimator ransac_estimator;
+  // ros::Publisher pose_pub =
+  //    nh.advertise<geometry_msgs::PoseArray>("/poses", 1, true);
+  // ransac_estimator.set_pose_publisher(pose_pub);
 
-  rapid::perception::GroupingPoseEstimator grouping_estimator;
-  ros::Publisher corr_pub = nh.advertise<visualization_msgs::MarkerArray>(
-      "/correspondences", 1, true);
-  ros::Publisher object_keypoints_pub =
-      nh.advertise<PointCloud2>("/landmark_keypoints", 1, true);
-  ros::Publisher scene_keypoints_pub =
-      nh.advertise<PointCloud2>("/scene_keypoints", 1, true);
-  grouping_estimator.set_correspondence_publisher(corr_pub);
-  grouping_estimator.set_scene_keypoints_publisher(scene_keypoints_pub);
-  grouping_estimator.set_object_keypoints_publisher(object_keypoints_pub);
+  // rapid::perception::GroupingPoseEstimator grouping_estimator;
+  // ros::Publisher corr_pub = nh.advertise<visualization_msgs::MarkerArray>(
+  //    "/correspondences", 1, true);
+  // ros::Publisher object_keypoints_pub =
+  //    nh.advertise<PointCloud2>("/landmark_keypoints", 1, true);
+  // ros::Publisher scene_keypoints_pub =
+  //    nh.advertise<PointCloud2>("/scene_keypoints", 1, true);
+  // grouping_estimator.set_correspondence_publisher(corr_pub);
+  // grouping_estimator.set_scene_keypoints_publisher(scene_keypoints_pub);
+  // grouping_estimator.set_object_keypoints_publisher(object_keypoints_pub);
 
   Estimators estimators;
   estimators.custom = &pose_estimator;
-  estimators.ransac = &ransac_estimator;
-  estimators.grouping = &grouping_estimator;
+  // estimators.ransac = &ransac_estimator;
+  // estimators.grouping = &grouping_estimator;
 
   // Shared state for main CLI
   PoseEstimatorInput estimator_input;
